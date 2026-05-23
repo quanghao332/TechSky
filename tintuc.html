@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin tức Bất Động Sản - LanAnh Home</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+    <!-- Tailwind & Global CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script src="/assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+    <!-- KHU VỰC HEADER (Render tự động từ components/layout.js) -->
+    <div id="app-header" class="sticky top-0 z-50"></div>
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-100 py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex text-sm">
+                <a href="/" class="text-gray-500 hover:text-primary">Trang chủ</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-700">Tin tức</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Banner tiêu đề -->
+    <section class="bg-white py-12 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Tin tức bất động sản</h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Cập nhật thông tin mới nhất về thị trường, chính sách và xu hướng đầu tư tại Việt Nam</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- SIDEBAR: Tin nổi bật -->
+            <aside class="w-full lg:w-80">
+                <div class="sticky top-24 space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                <i class="ri-fire-line text-red-500"></i>
+                            </div>
+                            Tin mới cập nhật
+                        </h3>
+                        
+                        <!-- CONTAINER ĐỔ TIN NỔI BẬT TỪ JS -->
+                        <div id="sidebar-news" class="space-y-4">
+                            <div class="animate-pulse flex space-x-3">
+                                <div class="bg-gray-200 w-16 h-12 rounded"></div>
+                                <div class="flex-1 space-y-2 py-1">
+                                    <div class="h-2 bg-gray-200 rounded"></div>
+                                    <div class="h-2 bg-gray-200 rounded w-1/2"></div>
+                                </div>
+                            </div>
+                            <!-- Thêm 2-3 block pulse để làm loading state đẹp -->
+                        </div>
+                    </div>
+
+                    <!-- Quảng cáo hoặc Newsletter (Tùy chọn) -->
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-6 text-white shadow-lg">
+                        <h3 class="text-lg font-semibold mb-2">Tư vấn miễn phí</h3>
+                        <p class="text-sm mb-4 opacity-90">Để lại số điện thoại để nhận phân tích thị trường từ chuyên gia.</p>
+                        <div class="flex flex-col gap-2">
+                            <input type="text" placeholder="Số điện thoại của bạn" class="px-3 py-2 rounded-lg text-gray-900 text-sm outline-none">
+                            <button class="bg-white text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors text-sm">
+                                Gửi ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- NỘI DUNG CHÍNH: Danh sách bài viết -->
+            <div class="flex-1">
+                <!-- CONTAINER GRID: Đổ danh sách tin tức từ JS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="articles-grid">
+                    <!-- Loading state cho Grid -->
+                    <div class="col-span-full py-20 text-center">
+                        <i class="ri-loader-4-line text-4xl text-blue-500 animate-spin"></i>
+                        <p class="text-gray-500 mt-2">Đang tải tin tức mới nhất...</p>
+                    </div>
+                </div>
+
+                <!-- Thanh phân trang (Pagination) -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-8">
+                    <div class="text-sm text-gray-600">
+                        Hiển thị bài viết mới nhất
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-2 border rounded-lg text-gray-400 hover:bg-gray-100 cursor-not-allowed">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg shadow-md font-bold">1</button>
+                        <button class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition">2</button>
+                        <button class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition">3</button>
+                        <span class="px-2 text-gray-400">...</span>
+                        <button class="px-3 py-2 border rounded-lg hover:bg-gray-100 transition">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- KHU VỰC FOOTER (Render tự động từ components/layout.js) -->
+    <div id="app-footer"></div>
+
+    <!-- SCRIPT XỬ LÝ (Module) -->
+    <!-- Đảm bảo đường dẫn này chính xác trên server của bạn -->
+    <script type="module" src="/assets/js/pages/tintuc.js"></script>
+
+</body>
+
+</html>

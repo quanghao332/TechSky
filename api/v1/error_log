@@ -1,0 +1,18 @@
+[09-May-2026 07:27:33 UTC] PHP Warning:  Undefined array key "created_at" in /home/rpyuoqjt/public_html/api/v1/news.php on line 34
+[09-May-2026 07:27:33 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/rpyuoqjt/public_html/api/v1/news.php:34
+Stack trace:
+#0 /home/rpyuoqjt/public_html/api/v1/news.php(34): PDOStatement->execute()
+#1 {main}
+  thrown in /home/rpyuoqjt/public_html/api/v1/news.php on line 34
+[09-May-2026 07:27:48 UTC] PHP Warning:  Undefined array key "created_at" in /home/rpyuoqjt/public_html/api/v1/news.php on line 34
+[09-May-2026 07:27:48 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/rpyuoqjt/public_html/api/v1/news.php:34
+Stack trace:
+#0 /home/rpyuoqjt/public_html/api/v1/news.php(34): PDOStatement->execute()
+#1 {main}
+  thrown in /home/rpyuoqjt/public_html/api/v1/news.php on line 34
+[09-May-2026 10:50:06 UTC] PHP Warning:  Undefined array key "created_at" in /home/rpyuoqjt/public_html/api/v1/news.php on line 34
+[09-May-2026 10:50:06 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/rpyuoqjt/public_html/api/v1/news.php:34
+Stack trace:
+#0 /home/rpyuoqjt/public_html/api/v1/news.php(34): PDOStatement->execute()
+#1 {main}
+  thrown in /home/rpyuoqjt/public_html/api/v1/news.php on line 34

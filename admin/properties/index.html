@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Bất Động Sản | LanAnh Admin Panel</title>
+    <meta name="description" content="Hệ thống quản lý bất động sản nội bộ LanAnh Home">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+    <div class="flex h-screen overflow-hidden relative">
+        
+        <!-- SIDEBAR (Mobile overlay logic) -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 text-white flex flex-col z-50 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
+            <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800">
+                <span class="font-['Pacifico'] text-2xl text-blue-500">LanAnh Admin</span>
+                <button onclick="toggleSidebar()" class="lg:hidden text-2xl text-slate-400"><i class="ri-close-line"></i></button>
+            </div>
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+                <a href="../index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition-all"><i class="ri-dashboard-line text-lg"></i><span>Bảng điều khiển</span></a>
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-900/20"><i class="ri-building-line text-lg"></i><span class="font-semibold">Quản lý BĐS</span></a>
+                <a href="../news/index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition-all"><i class="ri-newspaper-line text-lg"></i><span>Quản lý Tin tức</span></a>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-slate-100 rounded-lg"><i class="ri-menu-2-line text-2xl"></i></button>
+                    <h1 class="text-lg lg:text-xl font-bold text-slate-800">Danh sách BĐS</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-xs font-bold">Admin</p>
+                        <p class="text-[10px] text-slate-400">Quản trị viên</p>
+                    </div>
+                    <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">A</div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+                <!-- Actions Toolbar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <div class="relative w-full sm:w-80">
+                        <input type="text" placeholder="Tìm tên, địa chỉ BĐS..." class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all text-sm">
+                        <i class="ri-search-line absolute left-4 top-3 text-slate-400"></i>
+                    </div>
+                    <a href="form.html" class="w-full sm:w-auto bg-blue-600 text-white px-6 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-blue-700 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-600/20 text-sm">
+                        <i class="ri-add-line text-lg"></i> Thêm mới BĐS
+                    </a>
+                </div>
+
+                <!-- Table Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead>
+                                <tr class="bg-slate-50/50 text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-200">
+                                    <th class="p-5 font-bold">ID</th>
+                                    <th class="p-5 font-bold">Hình ảnh</th>
+                                    <th class="p-5 font-bold">Thông tin chi tiết</th>
+                                    <th class="p-5 font-bold">Giá bán/thuê</th>
+                                    <th class="p-4 font-bold text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="properties-table-body" class="divide-y divide-slate-100 text-sm">
+                                <tr><td colspan="5" class="p-10 text-center text-slate-400">Đang tải dữ liệu...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Mobile Overlay -->
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden transition-opacity duration-300"></div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        async function loadProperties() {
+            try {
+                const res = await fetch('../../api/v1/properties.php');
+                const result = await res.json();
+                let html = '';
+                
+                result.data.forEach(p => {
+                    // SEO & Speed: Sử dụng Cloudinary auto-format & quality
+                    let imgUrl = 'https://via.placeholder.com/150x110?text=No+Image';
+                    if (p.image) {
+                        const firstImg = p.image.split(',')[0].trim();
+                        imgUrl = firstImg.replace('/upload/', '/upload/w_200,h_150,c_fill,g_auto,q_auto,f_auto/');
+                    }
+
+                    html += `
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="p-5 text-slate-400 font-mono text-xs">#${p.id}</td>
+                            <td class="p-5">
+                                <img src="${imgUrl}" class="w-20 h-14 object-cover rounded-xl shadow-sm border border-slate-100" alt="${p.title}">
+                            </td>
+                            <td class="p-5">
+                                <div class="font-bold text-slate-800 line-clamp-1 mb-1">${p.title}</div>
+                                <div class="text-[11px] text-slate-400 flex items-center gap-1"><i class="ri-map-pin-line"></i> ${p.location}</div>
+                            </td>
+                            <td class="p-5">
+                                <div class="font-extrabold text-rose-500">${p.price}</div>
+                                <div class="text-[10px] uppercase font-bold text-slate-400">${p.type}</div>
+                            </td>
+                            <td class="p-5 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="form.html?id=${p.id}" class="w-9 h-9 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all" title="Sửa"><i class="ri-edit-line text-lg"></i></a>
+                                    <button onclick="deleteProperty(${p.id})" class="w-9 h-9 flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all" title="Xóa"><i class="ri-delete-bin-line text-lg"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+                document.getElementById('properties-table-body').innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('properties-table-body').innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-500">Lỗi kết nối máy chủ!</td></tr>';
+            }
+        }
+
+        async function deleteProperty(id) {
+            if (confirm('Dữ liệu bài đăng sẽ bị xóa vĩnh viễn. Bạn chắc chắn chứ?')) {
+                await fetch(`../../api/v1/properties.php?id=${id}`, { method: 'DELETE' });
+                loadProperties();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProperties);
+    </script>
+</body>
+</html>

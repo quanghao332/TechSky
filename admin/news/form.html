@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LanAnh Admin - Soạn thảo tin tức</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <!-- TinyMCE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-gray-900 text-white hidden md:flex flex-col shadow-xl">
+            <div class="h-16 flex items-center px-6 border-b border-gray-800 font-bold text-blue-500 text-xl">LanAnh
+                Admin</div>
+            <nav class="p-4">
+                <a href="index.html" class="flex items-center gap-3 p-3 bg-blue-600 rounded-lg text-white"><i
+                        class="ri-arrow-left-line"></i>Danh sách bài viết</a>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b flex items-center px-6 shadow-sm">
+                <h1 id="page-title" class="text-xl font-bold">Viết bài mới</h1>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6">
+                <form id="newsForm" class="max-w-4xl mx-auto bg-white rounded-xl shadow-md border p-8 space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Tiêu đề bài viết *</label>
+                        <input type="text" id="title" required
+                            class="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium">
+                    </div>
+
+                    <!-- Ảnh bài viết -->
+                    <div class="border-2 border-dashed p-6 rounded-lg bg-gray-50">
+                        <label class="block text-sm font-bold mb-4 flex items-center gap-2"><i
+                                class="ri-image-line text-blue-600"></i> Ảnh bìa bài viết</label>
+                        <div class="flex items-center gap-6">
+                            <input type="file" id="image_file" accept="image/*" class="hidden"
+                                onchange="handlePreview(this)">
+                            <button type="button" onclick="document.getElementById('image_file').click()"
+                                class="bg-white border px-6 py-3 rounded-lg hover:bg-gray-100 transition shadow-sm font-medium">Chọn
+                                ảnh...</button>
+                            <div id="preview-container" class="hidden relative">
+                                <img id="img-preview" src="" class="h-28 w-44 object-cover rounded-lg border shadow-md">
+                                <input type="hidden" id="image_url">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Nội dung chi tiết *</label>
+                        <textarea id="content" class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-6 border-t">
+                        <a href="index.html" class="px-6 py-2.5 rounded-lg border font-medium hover:bg-gray-50">Hủy</a>
+                        <button type="submit" id="btn_submit"
+                            class="bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-blue-700 shadow-lg flex items-center gap-2">
+                            <i class="ri-send-plane-fill"></i> <span>Lưu bài viết</span>
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 1. Khởi tạo TinyMCE với cấu hình chuẩn
+        tinymce.init({
+            selector: '#content',
+            height: 450,
+            plugins: 'lists link image table code wordcount',
+            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code',
+            // Senior Tip: Đồng bộ dữ liệu ngay khi gõ để tránh lỗi rỗng content
+            setup: function (editor) {
+                editor.on('change', function () {
+                    tinymce.triggerSave();
+                });
+            }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        // Hàm an toàn để đổ dữ liệu vào TinyMCE
+        function setTinyMCEContent(content) {
+            const editor = tinymce.get('content');
+            if (editor && editor.initialized) {
+                editor.setContent(content || '');
+            } else {
+                // Nếu chưa xong, đợi 100ms rồi thử lại
+                setTimeout(() => setTinyMCEContent(content), 100);
+            }
+        }
+
+        // 2. Load dữ liệu khi sửa
+        if (id) {
+            document.getElementById('page-title').innerText = "Sửa bài viết #" + id;
+
+            fetch(`../../api/v1/news.php?id=${id}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.json();
+                })
+                .then(res => {
+                    if (res.status === 'success') {
+                        const n = res.data;
+
+                        // Điền tiêu đề và URL ảnh cũ
+                        document.getElementById('title').value = n.title;
+                        document.getElementById('image_url').value = n.image || '';
+
+                        if (n.image) {
+                            document.getElementById('img-preview').src = n.image;
+                            document.getElementById('preview-container').classList.remove('hidden');
+                        }
+
+                        // Đổ nội dung vào TinyMCE bằng hàm an toàn
+                        setTinyMCEContent(n.content);
+                    }
+                })
+                .catch(err => {
+                    console.error("Lỗi Fetch dữ liệu:", err);
+                    alert("Không thể tải dữ liệu bài viết. Hãy kiểm tra lại Backend!");
+                });
+        }
+
+        // 3. Xử lý Xem trước ảnh khi chọn file máy tính
+        function handlePreview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('img-preview').src = e.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 4. Xử lý Lưu bài viết
+        document.getElementById('newsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn_submit');
+            const btnText = btn.querySelector('span');
+
+            btn.disabled = true;
+            btnText.innerText = "Đang xử lý...";
+
+            let finalUrl = document.getElementById('image_url').value;
+            const fileInput = document.getElementById('image_file');
+
+            try {
+                // Bước A: Upload ảnh lên Cloudinary (nếu chọn file mới)
+                if (fileInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('images', fileInput.files[0]);
+                    const uploadRes = await fetch('../../api/v1/upload.php', { method: 'POST', body: formData });
+                    const uploadData = await uploadRes.json();
+                    if (uploadData.success) {
+                        finalUrl = uploadData.urls[0];
+                    } else {
+                        throw new Error(uploadData.message);
+                    }
+                }
+
+                // Bước B: Gửi dữ liệu về news.php
+                // Đảm bảo lấy content mới nhất từ TinyMCE
+                const content = tinymce.get('content').getContent();
+
+                const payload = {
+                    title: document.getElementById('title').value,
+                    content: content,
+                    image: finalUrl
+                };
+
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `../../api/v1/news.php?id=${id}` : '../../api/v1/news.php';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Lỗi Submit:", error);
+                alert("Có lỗi xảy ra: " + error.message);
+                btn.disabled = false;
+                btnText.innerText = "Lưu bài viết";
+            }
+        });
+    </script>
+</body>
+
+</html>

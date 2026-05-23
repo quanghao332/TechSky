@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang tải bài viết... - LanAnh Home</title>
+    
+    <!-- SEO Meta Tags (Will be updated by JS) -->
+    <meta name="description" content="Đang tải nội dung bài viết bất động sản...">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="LanAnh Home">
+    <meta name="robots" content="index, follow">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+    <!-- Tailwind & Global CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script src="/assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="/assets/css/global.css">
+
+    <!-- JSON-LD for SEO (Article Schema) -->
+    <script type="application/ld+json" id="article-schema"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+    <div id="app-header" class="sticky top-0 z-50"></div>
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-100 py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex text-sm" id="breadcrumb">
+                <a href="/" class="text-gray-500 hover:text-primary">Trang chủ</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <a href="/tintuc.html" class="text-gray-500 hover:text-primary">Tin tức</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-700 truncate" id="breadcrumb-title">Đang tải...</span>
+            </nav>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- NỘI DUNG CHÍNH -->
+            <article class="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Skeleton Loading -->
+                <div id="article-loading" class="p-8 animate-pulse">
+                    <div class="h-10 bg-gray-200 rounded w-3/4 mb-6"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/4 mb-8"></div>
+                    <div class="w-full h-96 bg-gray-200 rounded-xl mb-8"></div>
+                    <div class="space-y-4">
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area (Hidden until loaded) -->
+                <div id="article-content" class="hidden">
+                    <!-- Featured Image -->
+                    <div id="post-hero"></div>
+
+                    <div class="p-6 md:p-10">
+                        <!-- Meta info -->
+                        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6 border-b pb-6">
+                            <span class="flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
+                                <i class="ri-price-tag-3-line"></i> Thị trường
+                            </span>
+                            <span class="flex items-center gap-1"><i class="ri-calendar-event-line"></i> <span id="post-date"></span></span>
+                            <span class="flex items-center gap-1"><i class="ri-user-3-line"></i> Admin LanAnh</span>
+                            <span class="flex items-center gap-1"><i class="ri-eye-line"></i> <span id="post-views">1,204</span> lượt xem</span>
+                        </div>
+
+                        <h1 id="post-title" class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"></h1>
+                        
+                        <!-- Article Body -->
+                        <div id="post-body" class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-4">
+                            <!-- Nội dung từ API sẽ đổ vào đây -->
+                        </div>
+
+                        <!-- Social Share -->
+                        <div class="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="font-bold text-gray-900 text-lg">Chia sẻ bài viết:</div>
+                            <div class="flex gap-3">
+                                <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href))" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2] text-white hover:opacity-80 transition">
+                                    <i class="ri-facebook-fill text-xl"></i>
+                                </button>
+                                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0068FF] text-white hover:opacity-80 transition">
+                                    <span class="font-bold text-xs">Zalo</span>
+                                </button>
+                                <button id="copy-link" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                                    <i class="ri-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- SIDEBAR -->
+            <aside class="w-full lg:w-80">
+                <div class="sticky top-24 space-y-6">
+                    <!-- Widget: Tin nổi bật -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="text-lg font-bold mb-5 flex items-center gap-2 border-b pb-3">
+                            <i class="ri-fire-fill text-orange-500"></i>
+                            Tin liên quan
+                        </h3>
+                        <div id="related-news" class="space-y-5">
+                            <!-- Data from JS -->
+                        </div>
+                    </div>
+
+                    <!-- Widget: Liên hệ -->
+                    <div class="bg-primary text-white rounded-xl p-6 shadow-lg relative overflow-hidden group">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold mb-2">Bạn cần tư vấn?</h3>
+                            <p class="text-blue-100 text-sm mb-4">Nhận bảng giá và chính sách ưu đãi mới nhất từ LanAnh Home.</p>
+                            <a href="tel:0901234567" class="block w-full text-center bg-white text-primary font-bold py-3 rounded-lg hover:bg-gray-100 transition">
+                                Gọi: 0901 234 567
+                            </a>
+                        </div>
+                        <i class="ri-customer-service-2-fill absolute -bottom-4 -right-4 text-8xl opacity-10 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="/assets/js/pages/chitiet-tintuc.js"></script>
+</body>
+</html>

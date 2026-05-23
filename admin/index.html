@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanAnh Admin - Bảng điều khiển</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- LỚP PHỦ MÀN HÌNH (Chỉ hiện trên mobile khi mở menu) -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-gray-900/50 z-30 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col shadow-xl z-40 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0">
+            <div class="h-16 flex items-center justify-between px-6 border-b border-gray-800">
+                <span class="font-['Pacifico'] text-2xl text-blue-500 font-bold">LanAnh Admin</span>
+                <!-- Nút đóng menu trên mobile -->
+                <button class="md:hidden text-gray-400 hover:text-white text-2xl" onclick="toggleSidebar()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-lg transition-colors">
+                    <i class="ri-dashboard-line text-lg"></i>
+                    <span class="font-medium">Bảng điều khiển</span>
+                </a>
+                <a href="properties/index.html" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
+                    <i class="ri-building-line text-lg"></i>
+                    <span class="font-medium">Quản lý BĐS</span>
+                </a>
+                <a href="news/index.html" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
+                    <i class="ri-newspaper-line text-lg"></i>
+                    <span class="font-medium">Quản lý Tin tức</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-800">
+                <button class="flex items-center gap-3 px-4 py-2 w-full text-red-400 hover:bg-gray-800 rounded-lg transition-colors">
+                    <i class="ri-logout-box-r-line"></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col relative overflow-hidden">
+            <!-- HEADER -->
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <!-- Nút Hamburger mở menu trên mobile -->
+                    <button class="md:hidden text-gray-500 hover:text-gray-800 text-2xl transition-colors" onclick="toggleSidebar()">
+                        <i class="ri-menu-line"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-800">Lịch sử hoạt động</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                        AD
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT BODY -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                        <h2 class="font-semibold text-lg">Nhật ký truy cập hệ thống</h2>
+                    </div>
+                    
+                    <!-- Vùng cuộn ngang cho bảng khi ở mobile -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-sm border-b border-gray-200">
+                                    <th class="p-4 font-medium w-20">ID</th>
+                                    <th class="p-4 font-medium w-36">Khách hàng</th>
+                                    <th class="p-4 font-medium w-48">Hành động</th>
+                                    <th class="p-4 font-medium">Mục tiêu (BĐS)</th>
+                                    <th class="p-4 font-medium w-48">Thời gian</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body" class="text-sm divide-y divide-gray-100">
+                                <tr><td colspan="5" class="p-4 text-center text-gray-500">Đang tải dữ liệu...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- SCRIPT GỌI API & LOGIC UI -->
+    <script>
+        // Hàm xử lý đóng mở Sidebar trên điện thoại
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../api/v1/logs.php')
+                .then(res => res.json())
+                .then(res => {
+                    let html = '';
+                    res.data.forEach(log => {
+                        html += `
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 text-gray-500 whitespace-nowrap">#${log.id}</td>
+                                <td class="p-4 whitespace-nowrap">
+                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">${log.user}</span>
+                                </td>
+                                <td class="p-4 text-gray-700 whitespace-nowrap">${log.action}</td>
+                                <td class="p-4 font-medium text-gray-900">${log.target}</td>
+                                <td class="p-4 text-gray-500 whitespace-nowrap">${log.created_at}</td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('logs-table-body').innerHTML = html;
+                }).catch(err => {
+                    console.log(err);
+                    document.getElementById('logs-table-body').innerHTML = `
+                        <tr><td colspan="5" class="p-4 text-center text-red-500">Không thể tải dữ liệu. Vui lòng thử lại.</td></tr>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

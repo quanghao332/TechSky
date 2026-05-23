@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanAnh Home - Trang Bất Động Sản Hàng Đầu Việt Nam</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+    <!-- Tailwind & Global CSS -->
+    <!-- ĐÃ SỬA: Thêm ?plugins=typography để hỗ trợ render Rich Text HTML từ TinyMCE -->
+    <script src="https://cdn.tailwindcss.com/3.4.16?plugins=typography"></script>
+    <script src="/assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="/assets/css/global.css">
+
+    <style>
+        /* CSS cho thanh cuộn của ảnh thu nhỏ */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- KHU VỰC HEADER -->
+    <div id="app-header" class="sticky top-0 z-50"></div>
+
+    <!-- BREADCRUMB -->
+    <div class="bg-white border-b border-gray-200 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav id="breadcrumb" class="flex text-sm text-gray-500 whitespace-nowrap overflow-x-auto scrollbar-hide">
+                <a href="/index.html" class="hover:text-primary transition-colors flex items-center">
+                    <i class="ri-home-4-line mr-1"></i> Trang chủ
+                </a>
+                <span class="mx-2">/</span>
+
+                <a id="breadcrumb-type-link" href="#" class="hover:text-primary transition-colors">
+                    <span id="breadcrumb-type-text">Đang tải...</span>
+                </a>
+
+                <span class="mx-2">/</span>
+                <span id="breadcrumb-title-active" class="text-gray-900 font-medium truncate">Đang tải...</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- CỘT TRÁI: THÔNG TIN CHI TIẾT (Chiếm 2/3) -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- Khu vực Album Ảnh -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                    <!-- Ảnh chính -->
+                    <div class="relative w-full aspect-[4/3] sm:aspect-video rounded-lg overflow-hidden mb-3 bg-gray-100">
+                        <img id="detail-image" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+                            alt="Căn hộ Richstar" class="w-full h-full object-cover">
+                        <span id="detail-type"
+                            class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm font-bold rounded shadow-sm">Cho
+                            Thuê</span>
+                    </div>
+                    <!-- Các ảnh thu nhỏ -->
+                    <div class="grid grid-cols-5 gap-2" id="gallery-thumbnails">
+                        <!-- ... -->
+                    </div>
+                </div>
+
+                <!-- Thông tin tiêu đề & Giá -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h1 id="detail-title" class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-snug">
+                        Đang tải tiêu đề...
+                    </h1>
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-4">
+                        <div id="detail-price" class="flex items-center text-red-500 font-bold text-3xl">
+                            Đang tải... 
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="flex items-center gap-1 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
+                                <i class="ri-share-forward-line"></i> Chia sẻ
+                            </button>
+                            <button
+                                class="flex items-center gap-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                <i class="ri-heart-line"></i> Lưu tin
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lưới thông số cơ bản -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-b border-gray-100">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1"><i class="ri-ruler-line mr-1"></i>Diện tích</div>
+                            <div id="detail-area" class="font-semibold text-gray-900">...</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1"><i class="ri-hotel-bed-line mr-1"></i>Phòng ngủ</div>
+                            <div id="detail-bed" class="font-semibold text-gray-900">...</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1"><i class="ri-showers-line mr-1"></i>Phòng tắm</div>
+                            <div id="detail-wc" class="font-semibold text-gray-900">...</div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 text-gray-600 flex items-start gap-2">
+                        <i class="ri-map-pin-2-line text-primary text-xl mt-0.5"></i>
+                        <span id="detail-location" class="text-base font-medium">Đang tải địa chỉ...</span>
+                    </div>
+                </div>
+
+                <!-- Khối Mô tả chi tiết -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b-2 border-primary inline-block">Thông
+                        tin mô tả</h2>
+                    
+                    <!-- ĐÃ SỬA: Thêm class "prose max-w-none prose-blue" và xóa "whitespace-pre-line" -->
+                    <div id="detail-description" class="prose max-w-none prose-blue text-gray-700">
+                        Đang tải nội dung...
+                    </div>
+                </div>
+
+                <!-- Khối Tiện ích (Bổ sung thêm cho chuẩn BĐS) -->
+                <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b-2 border-primary inline-block">Đặc
+                        điểm bất động sản</h2>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> Nội thất đầy đủ</li>
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> Có ban công</li>
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> Hồ bơi nội khu</li>
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> Phòng Gym</li>
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> An ninh 24/7</li>
+                        <li class="flex items-center gap-2 text-gray-700"><i
+                                class="ri-check-line text-green-500 text-xl"></i> Hầm để xe rộng</li>
+                    </ul>
+                </div> -->
+            </div>
+
+            <!-- CỘT PHẢI: SIDEBAR (Chiếm 1/3) -->
+            <div class="lg:col-span-1 space-y-6">
+
+                <!-- Sticky Sidebar Wrapper -->
+                <div class="sticky top-24 space-y-6">
+
+                    <!-- Box Thông tin liên hệ Môi giới / Chủ nhà -->
+                    <div class="bg-white rounded-xl shadow-md border border-primary/20 p-6 text-center">
+                        <div class="w-20 h-20 mx-auto rounded-full p-1 border-2 border-primary mb-3">
+                            <img src="https://ui-avatars.com/api/?name=Lan+Anh&background=0D8ABC&color=fff&size=100"
+                                alt="Avatar" class="w-full h-full rounded-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Nguyễn Lan Anh</h3>
+
+                        <div class="space-y-3 mt-4">
+                            <!-- Nút gọi điện -->
+                            <a href="tel:0987654321"
+                                class="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors">
+                                <i class="ri-phone-fill text-xl"></i> 0987.654.321
+                            </a>
+                            <!-- Nút Zalo -->
+                            <a href="https://zalo.me/0987654321" target="_blank"
+                                class="flex items-center justify-center gap-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors">
+                                <i class="ri-chat-3-line text-xl"></i> Nhắn tin Zalo
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Box Tin nổi bật / Cùng khu vực -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hidden lg:block">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                <i class="ri-building-4-line text-primary"></i>
+                            </div>
+                            Cho thuê cùng khu vực
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Item 1 -->
+                            <a href="#" class="flex gap-3 group">
+                                <img src="https://images.unsplash.com/photo-1502672260266-1c1de2d9d000"
+                                    class="w-20 h-16 object-cover rounded shrink-0">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-800 group-hover:text-primary line-clamp-2">
+                                        Căn hộ Emerald Celadon City 2PN View Công Viên</h4>
+                                    <p class="text-red-500 font-semibold text-sm mt-1">13 Triệu/tháng</p>
+                                </div>
+                            </a>
+                            <!-- Item 2 -->
+                            <a href="#" class="flex gap-3 group">
+                                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"
+                                    class="w-20 h-16 object-cover rounded shrink-0">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-800 group-hover:text-primary line-clamp-2">
+                                        Melody Residences Âu Cơ 70m2 Nội thất cơ bản</h4>
+                                    <p class="text-red-500 font-semibold text-sm mt-1">11 Triệu/tháng</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- KHU VỰC FOOTER -->
+    <div id="app-footer"></div>
+
+    <!-- MODULE JS XỬ LÝ TRANG NÀY -->
+    <script type="module" src="/assets/js/pages/chitiet.js"></script>
+
+</body>
+
+</html>

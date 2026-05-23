@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>LanAnh Admin - Quản lý Tin tức</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="flex h-screen overflow-hidden">
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-gray-900 text-white flex flex-col hidden md:flex">
+            <div class="h-16 flex items-center px-6 border-b border-gray-800 font-['Pacifico'] text-2xl text-blue-500">LanAnh Admin</div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="../index.html" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 rounded-lg"><i class="ri-dashboard-line"></i><span>Bảng điều khiển</span></a>
+                <a href="../properties/index.html" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 rounded-lg"><i class="ri-building-line"></i><span>Quản lý BĐS</span></a>
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-lg"><i class="ri-newspaper-line"></i><span>Quản lý Tin tức</span></a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b flex items-center px-6 shadow-sm justify-between">
+                <h1 class="text-xl font-bold">Danh sách Tin tức</h1>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="flex justify-between mb-6">
+                    <input type="text" placeholder="Tìm kiếm..." class="w-72 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    <a href="form.html" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 hover:bg-blue-700 shadow-md">
+                        <i class="ri-quill-pen-line"></i> Viết bài mới
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-500 text-sm border-b">
+                            <tr>
+                                <th class="p-4 w-16 text-center">ID</th>
+                                <th class="p-4 w-32">Hình ảnh</th>
+                                <th class="p-4">Tiêu đề bài viết</th>
+                                <th class="p-4 w-48 text-center">Thời gian đăng</th>
+                                <th class="p-4 w-32 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-table-body" class="text-sm divide-y">
+                            <tr><td colspan="5" class="p-8 text-center text-gray-400">Đang tải dữ liệu...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function loadNews() {
+            const res = await fetch('../../api/v1/news.php');
+            const result = await res.json();
+            let html = '';
+            result.data.forEach(n => {
+                // Tối ưu ảnh Thumbnail qua Cloudinary
+                const thumb = n.image ? n.image.replace('/upload/', '/upload/w_150,h_100,c_fill,q_auto,f_auto/') : 'https://via.placeholder.com/150x100?text=No+Image';
+                const date = new Date(n.created_at).toLocaleString('vi-VN');
+
+                html += `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="p-4 text-center text-gray-400">#${n.id}</td>
+                        <td class="p-4"><img src="${thumb}" class="w-20 h-14 object-cover rounded shadow-sm" alt="${n.title}"></td>
+                        <td class="p-4 font-medium text-gray-900 line-clamp-1 mt-3">${n.title}</td>
+                        <td class="p-4 text-center text-gray-500"><i class="ri-calendar-line"></i> ${date}</td>
+                        <td class="p-4 text-center">
+                            <a href="form.html?id=${n.id}" class="inline-flex p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition mr-1"><i class="ri-edit-line"></i></a>
+                            <button onclick="deleteNews(${n.id})" class="inline-flex p-2 bg-red-50 text-red-600 rounded-md hover:bg-red-600 hover:text-white transition"><i class="ri-delete-bin-line"></i></button>
+                        </td>
+                    </tr>`;
+            });
+            document.getElementById('news-table-body').innerHTML = html;
+        }
+
+        async function deleteNews(id) {
+            if (confirm('Xác nhận xóa bài viết này?')) {
+                await fetch(`../../api/v1/news.php?id=${id}`, { method: 'DELETE' });
+                loadNews();
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadNews);
+    </script>
+</body>
+</html>

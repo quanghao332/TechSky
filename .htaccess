@@ -1,0 +1,20 @@
+Options -MultiViews
+RewriteEngine On
+RewriteBase /
+
+# 1. Chặn vòng lặp cho file thật
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. Rewrite Tin tức: chitiet-tintuc/tieu-de-va-id -> chitiet-tintuc.html?id=id
+# Rule này lấy số cuối cùng sau dấu gạch ngang cuối cùng làm ID
+RewriteRule ^chitiet-tintuc/.*-([0-9]+)$ chitiet-tintuc.html?id=$1 [L,QSA]
+
+# 3. Rewrite Bất động sản
+RewriteRule ^chitiet/.*-([0-9]+)$ chitiet.html?id=$1 [L,QSA]
+
+# 4. Bỏ đuôi .html
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
